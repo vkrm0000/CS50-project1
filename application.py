@@ -28,13 +28,14 @@ Session(app)
 def index():
     if session.get("login") is None:
         session["login"] = False
-    # take user to login page if not logged in
-    if session['login'] == False:
-       return redirect(url_for("login_page"))
-    # if user is logged in will see search page
-    elif session['login'] == True:
-       user = session['user']
-       return render_template("search_book.html", user=user)
+  
+# if user is logged in will see search page
+    if session['login']:
+       return render_template("search_book.html", user=session['user'])
+    
+    return redirect(url_for("login_page"))
+    
+    
 
 
 @app.route("/register_form")
@@ -93,25 +94,17 @@ def login():
     password = request.form.get("password")
 
     # check if user exist
-    temp = []
-    user = db.execute("SELECT user_name FROM members").fetchall()
-    for usr, in user:
-        temp.append(usr)
-    if user_name not in temp:
-        return "ERROR: user does not exist"
+    if db.execute("SELECT user_name FROM members WHERE user_name=:user_name",{"user_name":user_name}).fetchone() is None:
+       return "ERROR: user does not exist"
 
     # check if passoword is correct
     id, user = db.execute("SELECT id,user_name FROM members WHERE user_name =:user_name",
                           {"user_name": user_name}).fetchone()
     pwd, = db.execute("SELECT password FROM pwds WHERE id=:id",
                       {'id': id}).fetchone()
-    print(pwd)
-    print(password)
     if pwd == password:
-
         session["login"] = True
         session["user"] = user_name
-        print(session["login"])
         return redirect(url_for('index'))
     else:
         return " password incorrect"
@@ -130,11 +123,9 @@ def logout():
 @app.route("/search_books",)
 def search_page():
     # user can only access search page if logged in
-    if session["login"] == True:
-       user = session['user']
-       return render_template("search_book.html", user=user)
-    if session['login'] == False or session['login'] == None:
-        return render_template("not_logged_in.html")
+    if session["login"]:
+       return render_template("search_book.html", user=session['user'])
+    return render_template("not_logged_in.html")
 
 
 @app.route("/search_results", methods=['POST'])
@@ -160,10 +151,8 @@ def detail(isbn):
     print(book)
     isbn, author, pub_year, title = book
     reviews = db.execute("SELECT * FROM reviews WHERE isbn=:isbn;",{'isbn':isbn}).fetchall()
-    if reviews != None:
-       return render_template("details.html", isbn=isbn, author=author, pub_year=pub_year, title=title,reviews=reviews,user=session['user'])
-    if reviews == None:
-         return render_template("details.html", isbn=isbn, author=author, pub_year=pub_year, title=title,user=session['user'])
+    return render_template("details.html", isbn=isbn, author=author, pub_year=pub_year, title=title,reviews=reviews,user=session['user'])
+    
 
 
 @app.route("/write_review/<int:isbn>")
