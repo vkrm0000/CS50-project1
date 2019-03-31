@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang ='en'>
+<head>
+    <title> log in</title>
+<style>
+    form {
+
+     padding-left:20px;
+     border: 2px solid black;
+     width: 200px
+     }
+
+</style>
+</head>
+<body>
+<h1> Project cs50 books.com</h1>
+
+<form action="{{url_for("login")}}" method="post">
+<p style ="font-size:30px"> log in</p>
+    <input type = "text" placeholder = "user name" maxlengeth ='20' name="user_name" required>
+   <p></p>
+    <input type ="password" placeholder ="password" maxlengeth ='20' minlengeth="8" name="password" required>
+    <p></p>
+    <button>log in</button>
+     <p></p>
+</form>
+<p style="color:green"> Not a member? <a href="{{url_for('register_form')}}"> click here to join</a> </p>
+
+</body>
+
+
+</html>

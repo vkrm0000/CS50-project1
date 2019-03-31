@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>registration</title>
+<style>
+h1{
+     text-align: left;
+    }
+form {
+
+     padding-left:20px;
+     border: 2px solid black;
+     width: 300px
+     }
+     input
+     {
+        height:25px;
+        width:250px;
+     }
+     input{
+     border:2px solid black;
+
+</style>
+
+</head>
+<body>
+<h1 style="" >Project Cs50 Books.com</h1>
+
+<form action="{{url_for('register')}}" method='post'>
+    <custom1>
+    <p style="font-size:25px">Sign Up</p>
+    <P></P>
+    <input  type="text" maxlength="20" placeholder="first name" name ='first_name'required>
+    <P></P>
+    <input type="text" maxlength="20" placeholder ="last name" name ="last_name" required>
+    <p>Email address</p>
+    <input type="email" maxlength="30" placeholder ="email address" name="email_address" required>
+        <p>Birth day (optional)</p>
+    <input type ="date" placeholder="birth year" name ="birth_day">
+    </custom1>
+
+
+    <p>pick username</p>
+     <input type="text" maxlength="20"  name ='user_name'required>
+    <p></p>
+        <p>choose your password (at least 8 character long)           </p>
+        <input type ="password" minlength="8" maxlength="20" placeholder="new passsword" name="password" required>
+         <p></p>
+        <button style="width:100px;height:30px;">submit!</button>
+        <p></p>
+
+</custom>
+
+
+
+</form>
+
+
+
+
+</body>
+</html>

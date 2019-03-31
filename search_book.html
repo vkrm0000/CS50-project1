@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+<h1 style="text-align:center">Project Cs50 Books Review</h1>
+
+<p style="text-align:right;padding-right:10%">{{user}}<a href="{{url_for('logout')}}"> logout</a>   </p>
+
+
+
+<form action="{{ url_for('search_result') }}" method="post">
+
+
+    <input style="font-size:20px;width:400px;height:30px;margin-left:40%;margin-top:10%" type ="text" placeholder="title or author name" name="keyword" required>
+    <button style="height:35px">search</button>
+
+
+</form>
+
+
+
+</body>
+
+</html>

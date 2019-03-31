@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>search results</title>
+</head>
+<body>
+
+<h1 style="text-align:center">Project Cs50 Books Review</h1>
+
+<p style="text-align:right;padding-right:10%">{{user}}<a href="{{url_for('logout')}}"> logout</a>   </p>
+
+<p style="font-size:25px">Search results</p>
+{% for isbn,title,author in book %}
+<hr>
+<p style="text-align:left;padding-left:2%;font-size:20px"> title:<a href="/details/{{isbn}}" name="{{title}}"> {{title}}</a> </p>
+    <p style="text-align:left;padding-left:2%;font-size:20px"> author: {{author}}</p>
+
+{%endfor%}
+
+</body>
+
+</html>
