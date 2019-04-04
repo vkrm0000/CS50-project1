@@ -3,13 +3,13 @@
 # https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/#block-v1:HarvardX+CS50W+Web+type@sequential+block@c62f675bf7f94f0e91b408cacda56451
 
 # short description : To create a webapp  where user can search for books ,read review from other user and also write review.
-# some of the requirement of project is not completed which I will implement in future which are: 1. user should not be able to write review twice 2. rating system
+# some of the requirement of project is not completed 1. rating system
 #  when i created column for isbn in my database i created it as integer which should had been string so my isbn database  might not be accurate
 
 # DATABASE : psql
 # FRAMEWORK: flask
 
-from flask import Flask, session, request, render_template, url_for, redirect
+from flask import Flask, session, request, render_template, url_for, redirect, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -159,7 +159,11 @@ def detail(isbn):
 def write_review(isbn):
     if session['login'] == False or session['login'] == None:
         return render_template("not_logged_in.html")
-
+    reviewers = db.execute("SELECT reviewer FROM reviews WHERE isbn=:isbn;",{"isbn": isbn}).fetchall()
+    for user, in reviewers:
+        if user == session['user']:
+            return "can only review one time"
+        
     return render_template("write_review.html",isbn=isbn)
 
 
@@ -175,19 +179,27 @@ def post_review(isbn):
     return "your review is posted"
 
 
-# the  project demands our website return json object but i have
-# no idea of json  so I will implement it later
-@app.route("/goodreads/<string:isbn>")
+# api from goodreads
+@app.route("/api/<string:isbn>")
 def goodreads(isbn):
     cl = client.GoodreadsClient("YwoRrbmvD1xQgyfIIOPQ", "INo8jC4JeAVOiXFckzQPKqYYeuq2wFLJyBKQmidDy0")
     book = cl.book(isbn=isbn)
     title = book.title
-    author = book.authors
+    authors = book.authors
+    author = ''
+    for a in authors:
+        author += a.__repr__()
+        author += ", "
     avg_rating = book.average_rating
     rev_count = book.text_reviews_count
-
-    return render_template("goodreads.html", title=title, isbn=isbn, description=book.description, author=author, avg_rating=avg_rating, rev_count=rev_count)
-
+    
+    return jsonify({
+        "title": title
+        "author": author
+        "avg_rating": avg_rating
+        "rev_count": rev_count
+    })   
+    
 
 
 
